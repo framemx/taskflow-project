@@ -1,14 +1,148 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
+// -------------------------
+//   Datasource & Generator
+// -------------------------
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")     // ใช้ตัวแปรสภาพแวดล้อมสำหรับเชื่อม DB
+}
+
+generator client {
+  provider = "prisma-client-js"       // ใช้ Prisma Client แบบ JavaScript
+}
+
+// -------------------------
+//          MODELS
+// -------------------------
+
+// ========== USER (ผู้ใช้งานระบบ) ==========
+model User {
+  uid        Int              @id @default(autoincrement())      // PK
+  uName      String                                              // ชื่อผู้ใช้
+  email      String           @unique                            // อีเมล (ห้ามซ้ำ)
+  password   String                                              // รหัสผ่าน
+  role       String                                              // สิทธิ์ เช่น admin / user
+  position   String?                                             // ตำแหน่งในบริษัท
+  isActive   Boolean          @default(true)                     // บัญชีเปิดใช้งานหรือไม่
+
+  // Relations
+  projects      projectEmployee[]   // ผู้ใช้คนนี้อยู่ในโปรเจกต์ใดบ้าง (M:N)
+  tasksAssign   taskAssign[]        // งานที่ผู้ใช้ถูก assign (M:N)
+  comments      Comment[]           // คอมเมนต์ที่ผู้ใช้เขียน
+  userComments  userComment[]       // ความสัมพันธ์คอมเมนต์ (M:N)
+}
+
+
+// ========== PROJECT (โปรเจกต์) ==========
+model Project {
+  pid            Int        @id @default(autoincrement())   // PK
+  pName          String                                     // ชื่อโปรเจกต์
+  pDateStart     DateTime?                                 // วันเริ่มโปรเจกต์
+  pDateEnd       DateTime?                                 // วันสิ้นสุดแผน
+  pDateCompleted DateTime?                                  // วันเสร็จจริง
+  pStatus        String?                                    // สถานะโปรเจกต์
+  pDescription   String?                                    // รายละเอียดโปรเจกต์
+
+  // Relations
+  employees  projectEmployee[]     // ผู้ที่สังกัดโปรเจกต์ (M:N)
+  tasks      task[]                // งานทั้งหมดในโปรเจกต์ (1 → Many)
+}
+
+
+// ========== PROJECT - EMPLOYEE (ตารางกลาง M:N) ==========
+model projectEmployee {
+  uid  Int              // FK → User
+  pid  Int              // FK → Project
+  date DateTime?        // วันที่เข้าร่วมโปรเจกต์
+
+  // Relations
+  user    User    @relation(fields: [uid], references: [uid])     // user ในโปรเจกต์
+  project Project @relation(fields: [pid], references: [pid])     // โปรเจกต์ที่เข้าร่วม
+
+  @@id([uid, pid])      // Composite Primary Key
+}
+
+
+// ========== TASK (งานภายในโปรเจกต์) ==========
+model task {
+  tid          Int        @id @default(autoincrement())    // PK
+  tTitle       String                                     // ชื่องาน
+  tType        String?                                    // ประเภทงาน
+  tDescription String?                                    // รายละเอียดงาน
+  tDateCreate  DateTime?                                  // วันสร้างงาน
+  tDateStart   DateTime?                                  // วันเริ่มทำงาน
+  tDateCommit  DateTime?                                  // วันส่งงานครั้งแรก
+  tDateDue     DateTime?                                  // Deadline
+  tStatus      String?                                    // สถานะงาน
+  tPriority    String?                                    // ความสำคัญ
+
+  // FK → Project
+  pid          Int?
+  project      Project?   @relation(fields: [pid], references: [pid])
+
+  // FK → Column (สถานะในบอร์ด เช่น To Do / Doing / Done)
+  cid          Int?
+  column       column?    @relation(fields: [cid], references: [cid])
+
+  // Relations
+  assigns      taskAssign[]       // ผู้ที่ถูก assign (M:N)
+  comments     Comment[]          // คอมเมนต์ในงานนี้
+}
+
+
+// ========== TASK ASSIGN (ผู้รับผิดชอบงาน M:N) ==========
+model taskAssign {
+  uid         Int              // FK → User ผู้รับงาน
+  tid         Int              // FK → Task
+  date_assign DateTime?        // วันที่ assign งาน
+
+  // Relations
+  user User @relation(fields: [uid], references: [uid])
+  task task @relation(fields: [tid], references: [tid])
+
+  @@id([uid, tid])      // Composite PK
+}
+
+
+// ========== COMMENT (คอมเมนต์ในงาน) ==========
+model Comment {
+  cmid       Int        @id @default(autoincrement())   // PK
+  cmDetail   String                                   // เนื้อหาคอมเมนต์
+  cmCreate   DateTime?                                // วันที่สร้าง
+  cmUpdate   DateTime?                                // วันที่แก้ไข
+  isActive   Boolean    @default(true)                 // เปิด/ปิดคอมเมนต์
+
+  // FK → User (คนเขียน)
+  uid        Int?
+  user       User?     @relation(fields: [uid], references: [uid])
+
+  // FK → Task (คอมเมนต์นี้อยู่ในงานไหน)
+  tid        Int?
+  task       task?     @relation(fields: [tid], references: [tid])
+
+  // Relations
+  userComments userComment[]   // ความสัมพันธ์ M:N กับ User
+}
+
+
+// ========== USER COMMENT (M:N เชื่อม User ↔ Comment) ==========
+model userComment {
+  uid  Int          // FK → User
+  cmid Int          // FK → Comment
+
+  // Relations
+  user    User    @relation(fields: [uid], references: [uid])
+  comment Comment @relation(fields: [cmid], references: [cmid])
+
+  @@id([uid, cmid])      // Composite PK
+}
+
+
+// ========== COLUMN (คอลัมน์ใน Kanban Board) ==========
+model column {
+  cid     Int      @id @default(autoincrement())   // PK
+  cName   String                                   // ชื่อคอลัมน์ เช่น "To Do"
+  cIndex  Int?                                     // ลำดับคอลัมน์
+
+  // One Column → Many Tasks
+  tasks   task[]
 }
