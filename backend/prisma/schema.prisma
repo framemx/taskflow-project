@@ -3,7 +3,7 @@
 // -------------------------
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")     // ใช้ตัวแปรสภาพแวดล้อมสำหรับเชื่อม DB
+  // url      = env("DATABASE_URL")     // ใช้ตัวแปรสภาพแวดล้อมสำหรับเชื่อม DB
 }
 
 generator client {
@@ -32,7 +32,7 @@ model User {
 }
 
 
-// ========== PROJECT (โปรเจกต์) ==========
+// ========== PROJECT (โปรเจกต์) ==========  
 model Project {
   pid            Int        @id @default(autoincrement())   // PK
   pName          String                                     // ชื่อโปรเจกต์
