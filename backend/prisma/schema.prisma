@@ -3,9 +3,8 @@
 // -------------------------
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")     // ใช้ตัวแปรสภาพแวดล้อมสำหรับเชื่อม DB
+  url      = env("DATABASE_URL") // <--- ยกเลิกการคอมเมนต์บรรทัดนี้
 }
-
 generator client {
   provider = "prisma-client-js"       // ใช้ Prisma Client แบบ JavaScript
 }
