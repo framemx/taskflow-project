@@ -7,9 +7,13 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@hapi/hapi": "^21.4.4",
+    "@hapi/inert": "^7.1.0",
+    "@hapi/vision": "^7.0.3",
     "@prisma/client": "^6.8.2",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "dotenv": "^17.2.3",
+    "hapi-swagger": "^17.3.2",
+    "joi": "^17.13.3",
     "pg": "^8.16.3"
   },
   "devDependencies": {
