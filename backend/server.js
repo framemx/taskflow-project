@@ -7,6 +7,7 @@ const Vision = require("@hapi/vision");
 const HapiSwagger = require("hapi-swagger");
 
 const userRoutes = require("./src/routes/user.route");
+const projectRoutes = require("./src/routes/project.route");
 
 const init = async () => {
   const server = Hapi.server({
@@ -35,6 +36,7 @@ const init = async () => {
 
   // --- Register Routes ---
   server.route(userRoutes);
+  server.route(projectRoutes);
 
   await server.start();
   console.log("🚀 Hapi Server running at:", server.info.uri);

@@ -23,7 +23,7 @@ exports.createUser = async (userData) => {
 exports.createManyUsers = async (userList) => {
     return await prisma.user.createMany({
         data: userList,
-        skipDuplicates: true // กัน Error email ซ้ำ
+        skipDuplicates: true // กัน Error อีเมลซ้ำ
     });
 };
 

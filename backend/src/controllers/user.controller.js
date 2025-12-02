@@ -4,9 +4,11 @@ const userService = require("../services/user.service");
 exports.getAllUsers = async (req, h) => {
   try {
     const users = await userService.getAllUsers();
-    return h.response(users).code(200);
+    return h.response(users + "พบข้อมูลผู้ใช้ทั้งหมด").code(200);
   } catch (error) {
-    return h.response({ ข้อผิดพลาด: error.message }).code(500);
+    return h
+      .response({ ข้อผิดพลาด: error.message + "ไม่พบผุ้ใช้ทั้งหมดที่ต้องการ" })
+      .code(500);
   }
 };
 
@@ -15,21 +17,28 @@ exports.getUserById = async (req, h) => {
     const user = await userService.getUserById(req.params.id);
 
     if (!user) {
-      return h.response({ message: "ไม่พบผู้ใช้ตามรหัสที่ระบุ หรือข้อมูลผู้ใช้ถูกลบไปแล้ว" }).code(404);
+      return h
+        .response({
+          message: "ไม่พบผู้ใช้ตามรหัสที่ระบุ หรือข้อมูลผู้ใช้ถูกลบไปแล้ว",
+        })
+        .code(404);
+    } else {
+      return h
+        .response({
+          message: "พบข้อมูลผู้ใช้",
+          data: user,
+        })
+        .code(200);
     }
-
-    return h.response({
-      message: "พบข้อมูลผู้ใช้",
-      data: user
-    }).code(200);
-
   } catch (error) {
-    return h.response({
-      error: error.message + " เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้"
-    }).code(500);
+    return h
+      .response({
+        error:
+          error.message + " เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ ลองหาสาเหตุใหม่",
+      })
+      .code(500);
   }
 };
-
 
 exports.createUser = async (req, h) => {
   try {
@@ -83,7 +92,12 @@ exports.createUser = async (req, h) => {
       })
       .code(201);
   } catch (error) {
-    return h.response({ error: error.message }).code(500);
+    return h
+      .response({
+        ข้อผิดพลาด:
+          error.message + "เกิดข้อผิดพลาดในการสร้างผู้ใช้ ลองหาสาเหตุใหม่",
+      })
+      .code(500);
   }
 };
 
@@ -96,12 +110,17 @@ exports.updateUser = async (req, h) => {
 
     return h
       .response({
-        message: "User updated successfully",
+        message: "User updated successfully อัปเดตผู้ใช้สำเร็จ",
         data: updatedUser,
       })
       .code(200);
   } catch (error) {
-    return h.response({ error: error.message }).code(500);
+    return h
+      .response({
+        ข้อผิดพลาด:
+          error.message + "เกิดข้อผิดพลาดในการอัปเดตผู้ใช้ ลองหาสาเหตุใหม่",
+      })
+      .code(500);
   }
 };
 
@@ -111,10 +130,14 @@ exports.deleteUser = async (req, h) => {
 
     return h
       .response({
-        message: "User deleted successfully",
+        message: "User deleted successfully ลบผู้ใช้สำเร็จ",
       })
       .code(200);
   } catch (error) {
-    return h.response({ error: error.message }).code(500);
+    return h
+      .response({
+        error: error.message + "เกิดข้อผิดพลาดในการลบผู้ใช้ ลองหาสาเหตุใหม่",
+      })
+      .code(500);
   }
 };

@@ -32,8 +32,7 @@ model User {
   userComments  userComment[]
 }
 
-
-
+  
 // ========== PROJECT (โปรเจกต์) ==========  
 model Project {
   pid            Int        @id @default(autoincrement())   // PK
