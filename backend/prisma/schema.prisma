@@ -3,32 +3,35 @@
 // -------------------------
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL") // <--- ยกเลิกการคอมเมนต์บรรทัดนี้
-}
-generator client {
-  provider = "prisma-client-js"       // ใช้ Prisma Client แบบ JavaScript
+  url      = env("DATABASE_URL")
 }
 
-// -------------------------
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+// -------------------------  
 //          MODELS
 // -------------------------
 
 // ========== USER (ผู้ใช้งานระบบ) ==========
 model User {
-  uid        Int              @id @default(autoincrement())      // PK
-  uName      String                                              // ชื่อผู้ใช้
-  email      String           @unique                            // อีเมล (ห้ามซ้ำ)
-  password   String                                              // รหัสผ่าน
-  role       String                                              // สิทธิ์ เช่น admin / user
-  position   String?                                             // ตำแหน่งในบริษัท
-  isActive   Boolean          @default(true)                     // บัญชีเปิดใช้งานหรือไม่
+  uid        Int              @id @default(autoincrement())
+  fname      String
+  lname      String
+  email      String           @unique
+  password   String
+  role       String
+  position   String?
+  isActive   Boolean          @default(true)
 
-  // Relations
-  projects      projectEmployee[]   // ผู้ใช้คนนี้อยู่ในโปรเจกต์ใดบ้าง (M:N)
-  tasksAssign   taskAssign[]        // งานที่ผู้ใช้ถูก assign (M:N)
-  comments      Comment[]           // คอมเมนต์ที่ผู้ใช้เขียน
-  userComments  userComment[]       // ความสัมพันธ์คอมเมนต์ (M:N)
+  projects      projectEmployee[]
+  tasksAssign   taskAssign[]
+  comments      Comment[]
+  userComments  userComment[]
 }
+
 
 
 // ========== PROJECT (โปรเจกต์) ==========  

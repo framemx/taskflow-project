@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "User" (
     "uid" SERIAL NOT NULL,
-    "uName" TEXT NOT NULL,
+    "fname" TEXT NOT NULL,
+    "lname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL,

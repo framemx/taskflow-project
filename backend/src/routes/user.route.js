@@ -2,12 +2,15 @@ const userController = require("../controllers/user.controller");
 const Joi = require("joi");
 
 const userSchema = Joi.object({
-  uName: Joi.string().required().example("Somchai"),
+  fname: Joi.string().required().example("Somchai"),
+  lname: Joi.string().required().example("Rakdee"),
   email: Joi.string().email().required().example("somchai@example.com"),
-  password: Joi.string().required().example("pass1234"),
-  role: Joi.string().valid("USER", "ADMIN").required().example("USER"),
-  position: Joi.string().required().example("Software Developer")
+  password: Joi.string().required().example("Pass1234"),
+  role: Joi.string().valid("USER", "ADMIN").required(),
+  position: Joi.string().optional().example("Developer")
 });
+
+
 
 module.exports = [
   {
