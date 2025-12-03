@@ -19,58 +19,30 @@ module.exports = [
         method: "GET",
         path:"/tasks",
         handler: taskController.getAllTasks,
-        options: {
-            description: "ดึงข้อมูลงานทั้งหมด",
-            tags: ["api", "tasks"]
-        }
     },
 
     {
         method: "GET",
         path:"/tasks/{id}",
         handler: taskController.getTaskById,
-        options:{
-            description: "ดึงงานรายตัว",
-            tags:["api","tasks"]
-        }
     },
 
     {
         method: "POST",
         path: "/tasks",
         handler: taskController.createTask,
-        options: {
-            description: "สร้างงานใหม่",
-            tags: ["api", "tasks"],
-            validate:{
-                payload:Joi.alternatives().try(
-                    taskSchema,           // 1 งาน
-                    Joi.array().items(taskSchema)  // หลายงาน
-                )
-            }
-        }
     },
 
     {
         method: "PUT",
         path: "/tasks/{id}",
         handler: taskController.updateTask,
-        options: {
-            description: "แก้ไขงาน",
-            tags: ["api", "tasks"],
-            validate:{
-                payload: taskSchema
-            }
-        }
     },
 
     {
         method: "DELETE",
         path: "/tasks/{id}",
         handler: taskController.deleteTask,
-        options: {
-            description: "ลบงาน",
-            tags: ["api", "tasks"]
-        }
+
     },
 ];

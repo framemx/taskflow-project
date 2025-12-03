@@ -65,15 +65,25 @@ exports.createProjectEmployee = async (data) => {
 
 // เพิ่มหลายรายการ
 exports.createManyProjectEmployees = async (list) => {
-  const formatted = list.map((item) => ({
-    uid: parseInt(item.uId),
-    pid: parseInt(item.pId),
-    date: item.dateJoin || null
-  }));
-
   return await prisma.projectEmployee.createMany({
-    data: formatted,
-    skipDuplicates: true
+    data: list.map(item => ({
+      uid: parseInt(item.uId),
+      pid: parseInt(item.pId),
+      date: item.dateJoin || null
+    })),
+    skipDuplicates: true // กัน Error การมอบหมายซ้ำ
+  });
+};
+
+// เพิ่มหลายรายการ
+exports.createManyProjectEmployees = async (list) => {
+  return await prisma.projectEmployee.createMany({
+    data: list.map(item => ({
+      uid: parseInt(item.uId),
+      pid: parseInt(item.pId),
+      date: item.dateJoin || null
+    })),
+    skipDuplicates: true // กัน Error การมอบหมายซ้ำ
   });
 };
 
