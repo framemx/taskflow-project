@@ -12,6 +12,23 @@ exports.getTaskById = async (id) => {
   });
 };
 
+// ดึงงานทั้งหมดของโปรเจกต์
+exports.getTasksByProjectId = async (projectId) => {
+    return await prisma.task.findMany({
+        where: { pid: parseInt(projectId) }
+    });
+};
+
+// ดึงงานเฉพาะ tid ที่อยู่ในโปรเจกต์นั้น
+exports.getTaskByProjectAndTaskId = async (projectId, taskId) => {
+    return await prisma.task.findFirst({
+        where: {
+            pid: parseInt(projectId),
+            tid: parseInt(taskId),
+        }
+    });
+};
+
 // เพิ่มงาน (ทีละงาน)
 exports.createTask = async (taskData) => {
   return await prisma.task.create({

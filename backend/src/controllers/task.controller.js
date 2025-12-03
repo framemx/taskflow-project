@@ -48,6 +48,58 @@ exports.getTaskById = async (req, h) => {
   }
 };
 
+// ดึงงานทั้งหมดของโปรเจกต์
+exports.getTasksByProjectId = async (req, h) => {
+  try {
+    const pid = req.params.pid;
+    const data = await taskService.getTasksByProjectId(pid);
+
+    if (!data || data.length === 0) {
+      return h.response({ message: "ไม่พบนงานในโปรเจกต์นี้" }).code(404);
+    }
+
+    return h.response({
+      message: "พบงานทั้งหมดของโปรเจกต์",
+      count: data.length,
+      data,
+    }).code(200);
+
+  } catch (error) {
+    return h.response({
+      message: "เกิดข้อผิดพลาดในการดึงงานของโปรเจกต์",
+      error: error.message
+    }).code(500);
+  }
+};
+
+// ดึงงานเฉพาะ tid ที่อยู่ในโปรเจกต์นั้น
+exports.getTaskByProjectAndTaskId = async (req, h) => {
+  try {
+    const pid = req.params.pid;
+    const tid = req.params.tid;
+
+    const data = await taskService.getTaskByProjectAndTaskId(pid, tid);
+
+    if (!data) {
+      return h.response({
+        message: "ไม่พบงานนี้ในโปรเจกต์ที่ระบุ"
+      }).code(404);
+    }
+
+    return h.response({
+      message: "พบงานของโปรเจกต์",
+      data,
+    }).code(200);
+
+  } catch (error) {
+    return h.response({
+      message: "เกิดข้อผิดพลาดในการดึงงาน",
+      error: error.message
+    }).code(500);
+  }
+};
+
+
 exports.createTask = async (req, h) => {
   try {
     const payload = req.payload;
