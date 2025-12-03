@@ -2,7 +2,14 @@ const prisma = require("../utils/prisma");
 
 // ดึง projectEmployee ทั้งหมด
 exports.getAllProjectEmployees = async () => {
-  return await prisma.projectEmployee.findMany();
+  return await prisma.projectEmployee.findMany(
+    {
+      include: {
+        user: true,
+        project: true
+      }
+    }
+  );
 };
 
 // ดึง projectEmployee ตามโปรเจกต์ (pId)

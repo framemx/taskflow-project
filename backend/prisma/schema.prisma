@@ -127,15 +127,17 @@ model Comment {
 
 // ========== USER COMMENT (M:N เชื่อม User ↔ Comment) ==========
 model userComment {
-  uid  Int          // FK → User
-  cmid Int          // FK → Comment
+  uid     Int
+  cmid    Int
+  action  String
+  detail  String?
 
-  // Relations
-  user    User    @relation(fields: [uid], references: [uid])
-  comment Comment @relation(fields: [cmid], references: [cmid])
+  user    User    @relation(fields: [uid], references: [uid], onDelete: Cascade)
+  comment Comment @relation(fields: [cmid], references: [cmid], onDelete: Cascade)
 
-  @@id([uid, cmid])      // Composite PK
+  @@id([uid, cmid])
 }
+
 
 
 // ========== COLUMN (คอลัมน์ใน Kanban Board) ==========

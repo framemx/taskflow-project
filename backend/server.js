@@ -11,6 +11,8 @@ const projectRoutes = require("./src/routes/project.route");
 const taskRoutes = require("./src/routes/task.route");
 const projectEmployeeRoutes = require("./src/routes/projectEmployees.route");
 const taskAssignRoutes = require("./src/routes/taskAssign.route");
+const commentRoutes = require("./src/routes/comment.route");
+const userCommentRoutes = require("./src/routes/userComment.route")
 
 const init = async () => {
   const server = Hapi.server({
@@ -43,6 +45,9 @@ const init = async () => {
   server.route(taskRoutes);
   server.route(projectEmployeeRoutes);
   server.route(taskAssignRoutes);
+  server.route(commentRoutes);
+  server.route(userCommentRoutes);
+  
 
   await server.start();
   console.log("🚀 Hapi Server running at:", server.info.uri);
