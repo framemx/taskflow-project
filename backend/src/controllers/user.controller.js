@@ -4,10 +4,18 @@ const userService = require("../services/user.service");
 exports.getAllUsers = async (req, h) => {
   try {
     const users = await userService.getAllUsers();
-    return h.response(users + "พบข้อมูลผู้ใช้ทั้งหมด").code(200);
+    return h
+      .response({
+        message: "พบข้อมูลผู้ใช้ทั้งหมด",
+        count: users.length,
+        data: users,
+      })
+      .code(200);
   } catch (error) {
     return h
-      .response({ ข้อผิดพลาด: error.message + "ไม่พบผุ้ใช้ทั้งหมดที่ต้องการ" })
+      .response({
+        error: error.message + " เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ทั้งหมด",
+      })
       .code(500);
   }
 };
