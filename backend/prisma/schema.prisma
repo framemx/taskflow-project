@@ -144,7 +144,8 @@ model userComment {
 model column {
   cid     Int      @id @default(autoincrement())   // PK
   cName   String                                   // ชื่อคอลัมน์ เช่น "To Do"
-  cIndex  Int?                                     // ลำดับคอลัมน์
+  cIndex  Int?       
+  isActive Boolean   @default(true)   // <-- ใช้ soft delete                              // ลำดับคอลัมน์
 
   // One Column → Many Tasks
   tasks   task[]

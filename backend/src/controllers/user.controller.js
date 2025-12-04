@@ -1,4 +1,4 @@
-const { error } = require("console");
+
 const userService = require("../services/user.service");
 
 exports.getAllUsers = async (req, h) => {

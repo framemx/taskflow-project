@@ -11,6 +11,7 @@ module.exports = [
     path: "/user-comments/user/{uId}",
     handler: controller.getByUserId,
   },
+  
   {
     method: "GET",
     path: "/user-comments/comment/{cmId}",
