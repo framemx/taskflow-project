@@ -8,14 +8,14 @@ exports.getAllUserComments = async () => {
 // GET by UserId
 exports.getUserCommentsByUserId = async (uId) => {
   return prisma.userComment.findMany({
-    where: { uId: parseInt(uId) }
+    where: { uid: parseInt(uId) }
   });
 };
 
 // GET by CommentId
 exports.getUserCommentsByCommentId = async (cmId) => {
   return prisma.userComment.findMany({
-    where: { cmId: parseInt(cmId) }
+    where: { cmid: parseInt(cmId) }
   });
 };
 
@@ -23,9 +23,9 @@ exports.getUserCommentsByCommentId = async (cmId) => {
 exports.getUserCommentByUC = async (uId, cmId) => {
   return prisma.userComment.findUnique({
     where: {
-      uId_cmId: {
-        uId: parseInt(uId),
-        cmId: parseInt(cmId),
+      uid_cmid: {
+        uid: parseInt(uId),
+        cmid: parseInt(cmId)
       }
     }
   });
@@ -42,14 +42,13 @@ exports.createUserComment = (data) =>
     }
   });
 
-
 // PUT
 exports.updateUserComment = async (uId, cmId, data) => {
   return prisma.userComment.update({
     where: {
-      uId_cmId: {
-        uId: parseInt(uId),
-        cmId: parseInt(cmId)
+      uid_cmid: {
+        uid: parseInt(uId),
+        cmid: parseInt(cmId)
       }
     },
     data: {
@@ -63,9 +62,9 @@ exports.updateUserComment = async (uId, cmId, data) => {
 exports.deleteUserComment = async (uId, cmId) => {
   return prisma.userComment.delete({
     where: {
-      uId_cmId: {
-        uId: parseInt(uId),
-        cmId: parseInt(cmId)
+      uid_cmid: {
+        uid: parseInt(uId),
+        cmid: parseInt(cmId)
       }
     }
   });
